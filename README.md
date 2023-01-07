@@ -1,6 +1,7 @@
-<h1 align = 'center'>Вступительный экзамен по программированию</h1>
-<h1 align = 'center'>Tinkoff Deep Learning 2023</h1>
+<h1 align = 'center'>Вступительный экзамен по программированию <br> Tinkoff Deep Learning 2023</h1>
 <hr>
+
+<!-- ![alt text]([https://kassaofd.ru/wp-content/uploads/2021/11/Tinkoff-bank.png]) -->
 
 <h2>Структура проекта: </h2>
 
