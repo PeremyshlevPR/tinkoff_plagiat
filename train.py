@@ -104,7 +104,6 @@ parser = argparse.ArgumentParser(description='Input and Output files')
 parser.add_argument('orig_folder', type=str, help='Folder with original texts of python programms')
 parser.add_argument('plagiat_folder_1', type=str, help='Folder with plagiated programms')
 parser.add_argument('plagiat_folder_2', type=str, help='Folder with plagiated programms')
-parser.add_argument('--tfidf', type=str, help='Filename for saving tfidf vocabulary')
 parser.add_argument('--model', type=str, help='Filename for saving trained classifier')
 
 
@@ -152,11 +151,7 @@ best_logreg = logreg_grid.best_estimator_
 
 
 # Сохраняем модель tfidf и классификатор
-if args.tfidf:
-    with open(args.tfidf, "wb") as tfidf_file:
-        pickle.dump(vectorizer.vocabulary_, tfidf_file)
-
 if args.model:
     with open(args.model, "wb") as model_file:
-        pickle.dump(best_logreg, model_file)
+        pickle.dump((vectorizer.vocabulary_, best_logreg), model_file)
 

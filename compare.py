@@ -49,7 +49,7 @@ def ast_preprocessing(text):
 
             class_count_methods = 0
             for child_node in ast.iter_child_nodes(node):
-                if isinstance(child_node, (ast.FunctionDef)):
+                if isinstance(child_node, ast.FunctionDef):
                     child_node.name = node.name + '_method_' + str(class_count_methods + 1)
                     class_count_methods += 1
 
@@ -81,7 +81,6 @@ def preprocessing(text):
 parser = argparse.ArgumentParser(description='Input and Output files')
 parser.add_argument('input_file', type=str, help='Input text file with names of .py files')
 parser.add_argument('output_file', type=str, help='Output text file with scores of plagiarism')
-parser.add_argument('--tfidf', type=str, help='Filename for loading tfidf vocabulary')
 parser.add_argument('--model', type=str, help='Filename for loading trained classifier')
 args = parser.parse_args()
 
@@ -105,23 +104,19 @@ with open(args.input_file, 'r') as f:
         text1 = preprocessing(ast_preprocessing(text1))
         text2 = preprocessing(ast_preprocessing(text2))
 
+        #Считываем словарь tf-idf и модель классификации из бинарного файла
+        vocab, model = pickle.load(open(args.model, "rb"))
+
         # Разбиваем на токены и создаем корпус токенов
         transformer = TfidfTransformer()
-        loaded_vec = CountVectorizer(decode_error="replace", vocabulary=pickle.load(open(args.tfidf, "rb")))
+        loaded_vec = CountVectorizer(decode_error="replace", vocabulary=vocab)
         tfidf = transformer.fit_transform(loaded_vec.fit_transform([text1, text2]))
 
         # Сходство по косинусному расстоянию
         cos_sim = cosine_similarity(tfidf[0], tfidf[1])[0][0]
 
-        if args.model:
-            with open('model.pkl', 'rb') as model_file:
-                model = pickle.load(model_file)
-
-            # Сходство, предсказанное моделью
-            model_pred = model.predict_proba([[abs(x) for x in (tfidf[0] - tfidf[1]).todense().tolist()[0]]])[0, 1]
-
-        else:
-            model_pred = cos_sim
+        # Сходство, предсказанное моделью
+        model_pred = model.predict_proba([[abs(x) for x in (tfidf[0] - tfidf[1]).todense().tolist()[0]]])[0, 1]
 
         result.append(str(round((cos_sim + model_pred) / 2, 3)))
 
