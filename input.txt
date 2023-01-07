@@ -1,0 +1,6 @@
+files/lossy.py plagiat1/cnn.py
+files/lossy.py plagiat1/lossy.py
+files/__main__.py plagiat1/__main__.py
+plagiat1/cnn.py plagiat2/cnn.py
+files/defaults.py files/evaluate.py
+files/lags.py plagiat2/main.py
